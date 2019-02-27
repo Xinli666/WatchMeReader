@@ -1,0 +1,850 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>今日头条</title>
+    <script src="/js/main.js"></script>
+    <link rel="stylesheet" href="/css/main.css" type="text/css" />
+</head>
+<body>
+<div>
+    <div class="header">
+        <div id="complaint" class="complaint" onclick="showcomplaint()">
+            意见反馈
+        </div>
+        <div class="time" id="time">
+
+        </div>
+        <div class="complain" id="complain">
+            <div class="complaintitle">
+                意见反馈
+            </div>
+            <form th:action="@{/feedback}" method="post">
+            <div class="complaincontent">
+                <div class="complaintext">
+                    联系方式（必填）
+                </div>
+                <input name="email" type="text" class="inputtext1" placeholder="您的邮箱/QQ号">
+                <div class="complaintext">
+                    您的意见（必填）
+                </div>
+                <textarea name="comment" class="inputtext2" placeholder="请填写您的意见"></textarea>
+
+                <div class="complainfoot">
+                    <input type="submit" class="submitcomplaint" value="提交">
+                    <input type="button" class="closecomplaint" onclick="closecomplain()" value="关闭">
+                </div>
+
+            </div>
+            </form>
+        </div>
+    </div>
+    <div class="bodyer">
+        <div class="navigation">
+            <div class="logo">
+                <img src="/css/images/logo.png" alt="今日头条" style="width: 108px; height: 27px;">
+            </div>
+            <span th:text="${colPreNum}" style="display: none" id="linum"></span>
+            <span th:text="${tagNum}" style="display: none" id="tagnum"></span>
+            <ul>
+                <li>
+                    <a th:href="@{/recommend}" class="channel-item" id="span1" >
+                        <span>推荐</span>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/entertainment}" class="channel-item" id="span2" >
+                        <span>娱乐</span>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/sports}" class="channel-item" id="span3">
+                        <span>体育</span>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/finance}" class="channel-item" id="span4" >
+                        <span>经济</span>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/chinanews}" class="channel-item" id="span5" >
+                        <span>政治</span>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/worldnews}" class="channel-item" id="span6">
+                        <span>国际</span>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/society}" class="channel-item" id="span7">
+                        <span>社会</span>
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{education}" class="channel-item" id="span8">
+                        <span>教育</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="news">
+            <div id="thumbnail" class="thumbnail">
+                <ul id="photoul" class="pic">
+                    <li id="photo1" class="slide-item">
+                        <img th:src="${img1}">
+                        <a th:href="${text1}" target="_blank">
+                            <p th:text="${pretitle1}"></p>
+                        </a>
+                    </li>
+                    <li id="photo2" class="slide-item" >
+                        <img th:src="${img2}">
+                        <a th:href="${text2}" target="_blank">
+                        <p th:text="${pretitle2}"></p>
+                        </a>
+                    </li>
+                    <li id="photo3" class="slide-item" >
+                        <img th:src="${img3}">
+                        <a th:href="${text3}" target="_blank">
+                        <p th:text="${pretitle3}"></p>
+                        </a>
+                    </li>
+                    <li id="photo4" class="slide-item" >
+                        <img th:src="${img4}">
+                        <a th:href="${text4}" target="_blank">
+                        <p th:text="${pretitle4}"></p>
+                        </a>
+                    </li>
+                    <li id="photo5" class="slide-item" >
+                        <img th:src="${img5}">
+                        <a th:href="${text5}" target="_blank">
+                        <p th:text="${pretitle5}"></p>
+                        </a>
+                    </li>
+                    <li id="photo6" class="slide-item" >
+                        <img th:src="${img6}">
+                        <a th:href="${text6}" target="_blank">
+                        <p th:text="${pretitle6}"></p>
+                        </a>
+                    </li>
+                </ul>
+                <ul class="nav">
+                    <li id="tab1" class="slide-tab-item active">
+                        要闻
+                    </li>
+                    <li id="tab2" class="slide-tab-item">
+                        社会
+                    </li>
+                    <li id="tab3" class="slide-tab-item">
+                        娱乐
+                    </li>
+                    <li id="tab4" class="slide-tab-item">
+                        体育
+                    </li>
+                    <li id="tab5" class="slide-tab-item">
+                        军事
+                    </li>
+                    <li id="tab6" class="slide-tab-item">
+                        明星
+                    </li>
+                </ul>
+            </div>
+            <div class="newscontent">
+                <ul id="newscontent">
+
+                    <iframe id="list_frame" name="list_iframe" style="display: none"></iframe>
+
+                    <li tabindex = "1" id="news1" onclick="choosenews(1)">
+
+                            <div class="newsbox">
+                                <div class="newsimage">
+                                    <img class="loadimage" th:src="${img_address1}">
+                                    <span th:text="${img_address1}" style="display:none;" id="myimage1"></span>
+                                </div>
+                                <div class="newsinfbox">
+                                    <div class="newsinf">
+                                        <form id="form1" method="post" th:action="@{/list}" target="list_iframe">
+                                        <div class="newstitle">
+                                            <input name="list" type="text" id="choose1" style="display:none">
+                                            <span name="title" id="title1" th:text="${title1}"></span>
+                                        </div>
+                                        </form>
+                                        <div class="newsfoot">
+                                            <div class="newsheat">
+                                                <span th:text="'热度：'+${heat1}"></span>
+                                            </div>
+                                            <div class="newstime">
+                                                <span th:text="${time1}"></span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="newsabbreviate"  id="abbreviate1">
+                                <div class="abbreviate">
+                                    <p th:text="${summary1}"></p>
+                                    <a th:href="${news_address1}" target="_blank" class="originaltext">阅读原文</a>
+                                </div>
+                                <div class="comment">
+                                    <div class="commenthead">
+                                        <em th:text="${number1+ ' 条评论'}"></em>
+                                    </div>
+                                    <form id="formtext1" method="post" th:action="@{/comment}">
+                                        <input name="list" type="text" id="newstitle1" style="display:none">
+                                        <div class="commentinput">
+                                            <textarea name="textarea" class="inputtextarea" onclick="showtextarea(1)" placeholder="请写下你的评论..."></textarea>
+                                        <div onclick="submitcomment(1)" class="submitcomment">
+                                            评论
+                                        </div>
+                                        </div>
+                                    </form>
+
+                                    <form id="formcomment" method="post" th:action="@{/submitLike}">
+                                    <ul th:each="Comment:${comment1}">
+                                        <li>
+                                            <div id="commentName" th:text="${Comment.getName()}" class="commentuser">
+                                            </div>
+                                            <p id="commentComment" th:text="${Comment.getNews()}" style="display: none"></p>
+                                            <input id="commentName2" type="text" style="display: none"  name="name" />
+                                            <input id="commentComment2" type="text" style="display: none"  name="comment" />
+                                            <p th:text="${Comment.getComment()}"></p>
+                                            <span onclick="submitlike()" th:text="${Comment.getNumber()}+' 赞'"></span>
+                                        </li>
+                                    </ul>
+                                    </form>
+                                </div>
+                            </div>
+                        </li>
+                    <li tabindex = "1" id="news2" onclick="choosenews(2)">
+
+                        <div class="newsbox">
+                            <div class="newsimage">
+                                <img class="loadimage" th:src="${img_address2}">
+                                <span th:text="${img_address2}" style="display:none;" id="myimage2"></span>
+                            </div>
+                            <div class="newsinfbox">
+                                <div class="newsinf">
+                                    <form id="form2" method="post" th:action="@{/list}" target="list_iframe">
+                                        <div class="newstitle">
+                                            <input name="list" type="text" id="choose2" style="display:none">
+                                            <span name="title" id="title2" th:text="${title2}"></span>
+                                        </div>
+                                    </form>
+                                    <div class="newsfoot">
+                                        <div class="newsheat">
+                                            <span th:text="'热度：'+${heat2}"></span>
+                                        </div>
+                                        <div class="newstime">
+                                            <span th:text="${time2}"></span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="newsabbreviate"  id="abbreviate2">
+                            <div class="abbreviate">
+                                <p th:text="${summary2}"></p>
+                                <a th:href="${news_address2}" target="_blank" class="originaltext">阅读原文</a>
+                            </div>
+                            <div class="comment">
+                                <div class="commenthead">
+                                    <em th:text="${number2+ ' 条评论'}"></em>
+                                </div>
+                                <form id="formtext2" method="post" th:action="@{/comment}">
+                                    <input name="list" type="text" id="newstitle2" style="display:none">
+                                    <div class="commentinput">
+                                        <textarea name="textarea" class="inputtextarea" onclick="showtextarea(2)" placeholder="请写下你的评论..."></textarea>
+                                        <div onclick="submitcomment(2)" class="submitcomment">
+                                            评论
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <ul th:each="Comment:${comment2}">
+                                    <li>
+                                        <div th:text="${Comment.getName()}" class="commentuser">
+
+                                        </div>
+                                        <p th:text="${Comment.getComment()}"></p>
+                                        <span th:text="${Comment.getNumber()}+' 赞'"></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    <li tabindex = "1" id="news3" onclick="choosenews(3)">
+
+                        <div class="newsbox">
+                            <div class="newsimage">
+                                <img class="loadimage" th:src="${img_address3}">
+                                <span th:text="${img_address3}" style="display:none;" id="myimage3"></span>
+                            </div>
+                            <div class="newsinfbox">
+                                <div class="newsinf">
+                                    <form id="form3" method="post" th:action="@{/list}" target="list_iframe">
+                                        <div class="newstitle">
+                                            <input name="list" type="text" id="choose3" style="display:none">
+                                            <span name="title" id="title3" th:text="${title3}"></span>
+                                        </div>
+                                    </form>
+                                    <div class="newsfoot">
+                                        <div class="newsheat">
+                                            <span th:text="'热度：'+${heat3}"></span>
+                                        </div>
+                                        <div class="newstime">
+                                            <span th:text="${time3}"></span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="newsabbreviate"  id="abbreviate3">
+                            <div class="abbreviate">
+                                <p th:text="${summary3}"></p>
+                                <a th:href="${news_address3}" target="_blank" class="originaltext">阅读原文</a>
+                            </div>
+                            <div class="comment">
+                                <div class="commenthead">
+                                    <em th:text="${number3+ ' 条评论'}"></em>
+                                </div>
+                                <form id="formtext3" method="post" th:action="@{/comment}">
+                                    <input name="list" type="text" id="newstitle3" style="display:none">
+                                    <div class="commentinput">
+                                        <textarea name="textarea" class="inputtextarea" onclick="showtextarea(3)" placeholder="请写下你的评论..."></textarea>
+                                        <div onclick="submitcomment(3)" class="submitcomment">
+                                            评论
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <ul th:each="Comment:${comment3}">
+                                    <li>
+                                        <div th:text="${Comment.getName()}" class="commentuser">
+
+                                        </div>
+                                        <p th:text="${Comment.getComment()}"></p>
+                                        <span th:text="${Comment.getNumber()}+' 赞'"></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    <li tabindex = "1" id="news4" onclick="choosenews(4)">
+
+                        <div class="newsbox">
+                            <div class="newsimage">
+                                <img class="loadimage" th:src="${img_address4}">
+                                <span th:text="${img_address4}" style="display:none;" id="myimage4"></span>
+                            </div>
+                            <div class="newsinfbox">
+                                <div class="newsinf">
+                                    <form id="form4" method="post" th:action="@{/list}" target="list_iframe">
+                                        <div class="newstitle">
+                                            <input name="list" type="text" id="choose4" style="display:none">
+                                            <span name="title" id="title4" th:text="${title4}"></span>
+                                        </div>
+                                    </form>
+                                    <div class="newsfoot">
+                                        <div class="newsheat">
+                                            <span th:text="'热度：'+${heat4}"></span>
+                                        </div>
+                                        <div class="newstime">
+                                            <span th:text="${time4}"></span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="newsabbreviate"  id="abbreviate4">
+                            <div class="abbreviate">
+                                <p th:text="${summary4}"></p>
+                                <a th:href="${news_address4}" target="_blank" class="originaltext">阅读原文</a>
+                            </div>
+                            <div class="comment">
+                                <div class="commenthead">
+                                    <em th:text="${number4+ ' 条评论'}"></em>
+                                </div>
+                                <form id="formtext4" method="post" th:action="@{/comment}">
+                                    <input name="list" type="text" id="newstitle4" style="display:none">
+                                    <div class="commentinput">
+                                        <textarea name="textarea" class="inputtextarea" onclick="showtextarea(4)" placeholder="请写下你的评论..."></textarea>
+                                        <div onclick="submitcomment(4)" class="submitcomment">
+                                            评论
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <ul th:each="Comment:${comment4}">
+                                    <li>
+                                        <div th:text="${Comment.getName()}" class="commentuser">
+
+                                        </div>
+                                        <p th:text="${Comment.getComment()}"></p>
+                                        <span th:text="${Comment.getNumber()}+' 赞'"></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    <li tabindex = "1" id="news5" onclick="choosenews(5)">
+
+                        <div class="newsbox">
+                            <div class="newsimage">
+                                <img class="loadimage" th:src="${img_address5}">
+                                <span th:text="${img_address5}" style="display:none;" id="myimage5"></span>
+                            </div>
+                            <div class="newsinfbox">
+                                <div class="newsinf">
+                                    <form id="form5" method="post" th:action="@{/list}" target="list_iframe">
+                                        <div class="newstitle">
+                                            <input name="list" type="text" id="choose5" style="display:none">
+                                            <span name="title" id="title5" th:text="${title5}"></span>
+                                        </div>
+                                    </form>
+                                    <div class="newsfoot">
+                                        <div class="newsheat">
+                                            <span th:text="'热度：'+${heat5}"></span>
+                                        </div>
+                                        <div class="newstime">
+                                            <span th:text="${time5}"></span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="newsabbreviate"  id="abbreviate5">
+                            <div class="abbreviate">
+                                <p th:text="${summary5}"></p>
+                                <a th:href="${news_address5}" target="_blank" class="originaltext">阅读原文</a>
+                            </div>
+                            <div class="comment">
+                                <div class="commenthead">
+                                    <em th:text="${number5+ ' 条评论'}"></em>
+                                </div>
+                                <form id="formtext5" method="post" th:action="@{/comment}">
+                                    <input name="list" type="text" id="newstitle5" style="display:none">
+                                    <div class="commentinput">
+                                        <textarea name="textarea" class="inputtextarea" onclick="showtextarea(5)" placeholder="请写下你的评论..."></textarea>
+                                        <div onclick="submitcomment(5)" class="submitcomment">
+                                            评论
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <ul th:each="Comment:${comment5}">
+                                    <li>
+                                        <div th:text="${Comment.getName()}" class="commentuser">
+
+                                        </div>
+                                        <p th:text="${Comment.getComment()}"></p>
+                                        <span th:text="${Comment.getNumber()}+' 赞'"></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    <li tabindex = "1" id="news6" onclick="choosenews(6)">
+
+                        <div class="newsbox">
+                            <div class="newsimage">
+                                <img class="loadimage" th:src="${img_address6}">
+                                <span th:text="${img_address6}" style="display:none;" id="myimage6"></span>
+                            </div>
+                            <div class="newsinfbox">
+                                <div class="newsinf">
+                                    <form id="form6" method="post" th:action="@{/list}" target="list_iframe">
+                                        <div class="newstitle">
+                                            <input name="list" type="text" id="choose6" style="display:none">
+                                            <span name="title" id="title6" th:text="${title6}"></span>
+                                        </div>
+                                    </form>
+                                    <div class="newsfoot">
+                                        <div class="newsheat">
+                                            <span th:text="'热度：'+${heat6}"></span>
+                                        </div>
+                                        <div class="newstime">
+                                            <span th:text="${time6}"></span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="newsabbreviate"  id="abbreviate6">
+                            <div class="abbreviate">
+                                <p th:text="${summary6}"></p>
+                                <a th:href="${news_address6}" target="_blank" class="originaltext">阅读原文</a>
+                            </div>
+                            <div class="comment">
+                                <div class="commenthead">
+                                    <em th:text="${number6+ ' 条评论'}"></em>
+                                </div>
+                                <form id="formtext6" method="post" th:action="@{/comment}">
+                                    <input name="list" type="text" id="newstitle6" style="display:none">
+                                    <div class="commentinput">
+                                        <textarea name="textarea" class="inputtextarea" onclick="showtextarea(6)" placeholder="请写下你的评论..."></textarea>
+                                        <div onclick="submitcomment(6)" class="submitcomment">
+                                            评论
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <ul th:each="Comment:${comment6}">
+                                    <li>
+                                        <div th:text="${Comment.getName()}" class="commentuser">
+
+                                        </div>
+                                        <p th:text="${Comment.getComment()}"></p>
+                                        <span th:text="${Comment.getNumber()}+' 赞'"></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    <li tabindex = "1" id="news7" onclick="choosenews(7)">
+
+                        <div class="newsbox">
+                            <div class="newsimage">
+                                <img class="loadimage" th:src="${img_address7}">
+                                <span th:text="${img_address7}" style="display:none;" id="myimage7"></span>
+                            </div>
+                            <div class="newsinfbox">
+                                <div class="newsinf">
+                                    <form id="form7" method="post" th:action="@{/list}" target="list_iframe">
+                                        <div class="newstitle">
+                                            <input name="list" type="text" id="choose7" style="display:none">
+                                            <span name="title" id="title7" th:text="${title7}"></span>
+                                        </div>
+                                    </form>
+                                    <div class="newsfoot">
+                                        <div class="newsheat">
+                                            <span th:text="'热度：'+${heat7}"></span>
+                                        </div>
+                                        <div class="newstime">
+                                            <span th:text="${time7}"></span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="newsabbreviate"  id="abbreviate7">
+                            <div class="abbreviate">
+                                <p th:text="${summary7}"></p>
+                                <a th:href="${news_address7}" target="_blank" class="originaltext">阅读原文</a>
+                            </div>
+                            <div class="comment">
+                                <div class="commenthead">
+                                    <em th:text="${number7+ ' 条评论'}"></em>
+                                </div>
+                                <form id="formtext7" method="post" th:action="@{/comment}">
+                                    <input name="list" type="text" id="newstitle7" style="display:none">
+                                    <div class="commentinput">
+                                        <textarea name="textarea" class="inputtextarea" onclick="showtextarea(7)" placeholder="请写下你的评论..."></textarea>
+                                        <div onclick="submitcomment(7)" class="submitcomment">
+                                            评论
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <ul th:each="Comment:${comment7}">
+                                    <li>
+                                        <div th:text="${Comment.getName()}" class="commentuser">
+
+                                        </div>
+                                        <p th:text="${Comment.getComment()}"></p>
+                                        <span th:text="${Comment.getNumber()}+' 赞'"></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    <li tabindex = "1" id="news8" onclick="choosenews(8)">
+
+                        <div class="newsbox">
+                            <div class="newsimage">
+                                <img class="loadimage" th:src="${img_address8}">
+                                <span th:text="${img_address8}" style="display:none;" id="myimage8"></span>
+                            </div>
+                            <div class="newsinfbox">
+                                <div class="newsinf">
+                                    <form id="form8" method="post" th:action="@{/list}" target="list_iframe">
+                                        <div class="newstitle">
+                                            <input name="list" type="text" id="choose8" style="display:none">
+                                            <span name="title" id="title8" th:text="${title8}"></span>
+                                        </div>
+                                    </form>
+                                    <div class="newsfoot">
+                                        <div class="newsheat">
+                                            <span th:text="'热度：'+${heat8}"></span>
+                                        </div>
+                                        <div class="newstime">
+                                            <span th:text="${time8}"></span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="newsabbreviate"  id="abbreviate8">
+                            <div class="abbreviate">
+                                <p th:text="${summary8}"></p>
+                                <a th:href="${news_address8}" target="_blank" class="originaltext">阅读原文</a>
+                            </div>
+                            <div class="comment">
+                                <div class="commenthead">
+                                    <em th:text="${number8+ ' 条评论'}"></em>
+                                </div>
+                                <form id="formtext8" method="post" th:action="@{/comment}">
+                                    <input name="list" type="text" id="newstitle8" style="display:none">
+                                    <div class="commentinput">
+                                        <textarea name="textarea" class="inputtextarea" onclick="showtextarea(8)" placeholder="请写下你的评论..."></textarea>
+                                        <div onclick="submitcomment(1)" class="submitcomment">
+                                            评论
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <ul th:each="Comment:${comment8}">
+                                    <li>
+                                        <div th:text="${Comment.getName()}" class="commentuser">
+
+                                        </div>
+                                        <p th:text="${Comment.getComment()}"></p>
+                                        <span th:text="${Comment.getNumber()}+' 赞'"></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    <li tabindex = "1" id="news9" onclick="choosenews(9)">
+
+                        <div class="newsbox">
+                            <div class="newsimage">
+                                <img class="loadimage" th:src="${img_address9}">
+                                <span th:text="${img_address9}" style="display:none;" id="myimage9"></span>
+                            </div>
+                            <div class="newsinfbox">
+                                <div class="newsinf">
+                                    <form id="form9" method="post" th:action="@{/list}" target="list_iframe">
+                                        <div class="newstitle">
+                                            <input name="list" type="text" id="choose9" style="display:none">
+                                            <span name="title" id="title9" th:text="${title9}"></span>
+                                        </div>
+                                    </form>
+                                    <div class="newsfoot">
+                                        <div class="newsheat">
+                                            <span th:text="'热度：'+${heat9}"></span>
+                                        </div>
+                                        <div class="newstime">
+                                            <span th:text="${time9}"></span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="newsabbreviate"  id="abbreviate9">
+                            <div class="abbreviate">
+                                <p th:text="${summary9}"></p>
+                                <a th:href="${news_address9}" target="_blank" class="originaltext">阅读原文</a>
+                            </div>
+                            <div class="comment">
+                                <div class="commenthead">
+                                    <em th:text="${number9+ ' 条评论'}"></em>
+                                </div>
+                                <form id="formtext9" method="post" th:action="@{/comment}">
+                                    <input name="list" type="text" id="newstitle9" style="display:none">
+                                    <div class="commentinput">
+                                        <textarea name="textarea" class="inputtextarea" onclick="showtextarea(9)" placeholder="请写下你的评论..."></textarea>
+                                        <div onclick="submitcomment(9)" class="submitcomment">
+                                            评论
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <ul th:each="Comment:${comment9}">
+                                    <li>
+                                        <div th:text="${Comment.getName()}" class="commentuser">
+
+                                        </div>
+                                        <p th:text="${Comment.getComment()}"></p>
+                                        <span th:text="${Comment.getNumber()}+' 赞'"></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    <li tabindex = "1" id="news10" onclick="choosenews(10)">
+
+                        <div class="newsbox">
+                            <div class="newsimage">
+                                <img class="loadimage" th:src="${img_address10}">
+                                <span th:text="${img_address10}" style="display:none;" id="myimage10"></span>
+                            </div>
+                            <div class="newsinfbox">
+                                <div class="newsinf">
+                                    <form id="form10" method="post" th:action="@{/list}" target="list_iframe">
+                                        <div class="newstitle">
+                                            <input name="list" type="text" id="choose10" style="display:none">
+                                            <span name="title" id="title10" th:text="${title10}"></span>
+                                        </div>
+                                    </form>
+                                    <div class="newsfoot">
+                                        <div class="newsheat">
+                                            <span th:text="'热度：'+${heat10}"></span>
+                                        </div>
+                                        <div class="newstime">
+                                            <span th:text="${time10}"></span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="newsabbreviate"  id="abbreviate10">
+                            <div class="abbreviate">
+                                <p th:text="${summary10}"></p>
+                                <a th:href="${news_address10}" target="_blank" class="originaltext">阅读原文</a>
+                            </div>
+                            <div class="comment">
+                                <div class="commenthead">
+                                    <em th:text="${number10+ ' 条评论'}"></em>
+                                </div>
+                                <form id="formtext10" method="post" th:action="@{/comment}">
+                                    <input name="list" type="text" id="newstitle10" style="display:none">
+                                    <div class="commentinput">
+                                        <textarea name="textarea" class="inputtextarea" onclick="showtextarea(10)" placeholder="请写下你的评论..."></textarea>
+                                        <div onclick="submitcomment(1)" class="submitcomment">
+                                            评论
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <ul th:each="Comment:${comment10}">
+                                    <li>
+                                        <div th:text="${Comment.getName()}" class="commentuser">
+
+                                        </div>
+                                        <p th:text="${Comment.getComment()}"></p>
+                                        <span th:text="${Comment.getNumber()}+' 赞'"></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="information">
+            <form th:action="@{/search}" method="post">
+            <div class="searchbar">
+                <input name="text" type="text" placeholder="请输入要搜索的内容" class="inputbar">
+                <button type="submit" class="searchbtn">搜索</button>
+            </div>
+            </form>
+            <div class="unlogin">
+                <div id="login" class="login">
+                    <form th:action="@{/login}" method="post" >
+                        <div class="usernameinput">
+                            <span>用户名</span>
+                            <input type="text" name="name" class="username">
+                        </div>
+                        <div class="passwordinput">
+                            <span>密码</span>
+                            <input type="password" name="password" class="password">
+                        </div>
+                        <button type="submit" class="loginbtn">登录</button>
+                    </form>
+                    <button type="button" class="registbtn" onclick="window.location.href='/regist'">注册</button>
+                </div>
+                <div id="userinf" class="userinf">
+                    <div class="logout">
+                        <a th:href="@{/logout}" onclick="logout()">退出登录</a>
+                    </div>
+                    <div th:text="${loginName}" onclick="showchangeinf();" id="loginusername" class="loginusername">
+
+                    </div>
+                    <div class="userfoot">
+                        <div class="browsehistory">
+                            <span class="num" onclick="showbrowsehistory();" th:text="${browseCol}"></span><br>
+                            <span class="word">浏览记录</span>
+                        </div>
+                        <div class="divideline">
+                        </div>
+                        <div class="commenthistory">
+                            <span class="num" onclick="showcommenthistory();" th:text="${commentLogCol}"></span><br>
+                            <span class="word">评论记录</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="personalcenter">
+                <div id="userinformation" class="userinformation">
+                    <div class="userinformationhead">
+                        修改用户信息
+                    </div>
+                    <form th:action="@{/changeUser}" method="post" onsubmit="return changefunc();">
+                        <div class="changeusername">
+                            <span>用户名</span>
+                            <input name="name" id="changeusername" type="text" class="inputchangename"/>
+                        </div>
+                        <div class="changeusername">
+                            <span>密码</span>
+                            <input name="password" id="changepassword" type="text" class="inputchangename"/>
+                        </div>
+                        <div class="changeusername">
+                            <span>手机号</span>
+                            <input name="phone" id="changephone" type="text" class="inputchangename"/>
+                        </div>
+                        <div class="changeusername">
+                            <span>验证码</span>
+                            <input id="changevarify" type="text" class="inputvarifycode"/>
+                            <button type="button" onclick="getvarifycode()" class="getvarifycode">获取验证码</button>
+                        </div>
+                        <div class="changeusername">
+                            <input type="submit" class="submitchange" value="提交">
+                        </div>
+                    </form>
+                </div>
+                <div id="browsehis" class="browse">
+                    <div class="userinformationhead" style="margin-bottom:10px">
+                        用户浏览记录
+                    </div>
+
+                    <ul th:each="UserRecord:${user_record}">
+                        <li>
+                            <span th:text="${UserRecord.getNews()}" class="browsetitle">
+                            </span>
+                            <span th:text="${UserRecord.getTime()}" class="browsetime">
+                            </span>
+                        </li>
+                    </ul>
+
+                </div>
+                <div id="commenthis" class="commenthis">
+                    <div class="userinformationhead" style="margin-bottom:10px">
+                        用户评论记录
+                    </div>
+                    <ul th:each="Comment:${commentLog}">
+                        <li>
+                            <span th:text="${Comment.getNews()}" class="commenttitle">
+                            </span>
+                            <span th:text="${Comment.getComment()}" class="commentcontent">
+                            </span>
+                            <span th:text="${Comment.getNumber()}+'赞'" class="commentzan">
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
